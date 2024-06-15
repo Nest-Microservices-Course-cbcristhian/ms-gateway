@@ -18,8 +18,15 @@ export class OrdersController {
   }
 
   @Get()
-  findAll(@Query() paginationDto:PaginationDto) {
-    return this.client.send('findAllOrders',{})
+  async findAll(@Query() paginationDto:PaginationDto) {
+    try {
+      const orders= await firstValueFrom(
+        this.client.send('findAllOrders',{})
+      ) 
+      return orders
+    } catch (error) {
+      throw new RpcException(error)
+    }
   }
 
   @Get(':status')
