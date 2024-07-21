@@ -1,13 +1,18 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { envs } from './config/env';
-import { ValidationPipe } from '@nestjs/common';
+import { RequestMethod, ValidationPipe } from '@nestjs/common';
 import { ExceptionFilter } from './common/exceptions/rpc-exception.filter';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  app.setGlobalPrefix('api')
+  app.setGlobalPrefix('api',{
+    exclude:[{
+      path:'',
+      method: RequestMethod.GET
+    }]
+  })
 
   app.useGlobalPipes(
     new ValidationPipe({
